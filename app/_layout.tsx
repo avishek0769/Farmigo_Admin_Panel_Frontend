@@ -1,29 +1,31 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import TabLayout from "@/src/TabNavigator";
+import Login from "@/src/screens/Login";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
+import 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
+  const Stack = createNativeStackNavigator()
+  // const [loaded] = useFonts({
+  //   SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+  // });
 
-  if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
-  }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+      <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#fff", }}>
+        <SafeAreaProvider>
+          <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }} edges={[]}>
+              <StatusBar translucent backgroundColor="transparent" style="dark" />
+
+              <Stack.Navigator initialRouteName="Tabs" screenOptions={{ headerShown: false }} >
+                <Stack.Screen name="Login" component={Login} />
+                <Stack.Screen name="Tabs" component={TabLayout} />
+              </Stack.Navigator>
+          </SafeAreaView>
+        </SafeAreaProvider>
+    </GestureHandlerRootView >
   );
 }
